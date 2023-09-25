@@ -1,0 +1,167 @@
+%You can leave alone everything before Line 84.
+\documentclass{article}
+\usepackage{url,amsfonts, amsmath, amssymb, amsthm}
+\usepackage{pict2e}
+\usepackage[percent]{overpic}
+% Page layout
+\setlength{\textheight}{8.75in}
+\setlength{\columnsep}{2.0pc}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0.0in}
+\setlength{\headsep}{0.0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\parindent}{1pc}
+\newcommand{\shortbar}{\begin{center}\rule{5ex}{0.1pt}\end{center}}
+%\renewcommand{\baselinestretch}{1.1}
+% Macros for course info
+\newcommand{\courseNumber}{CMSC/PHYS 457}
+\newcommand{\courseTitle}{Introduction to Quantum Computing}
+\newcommand{\semester}{Spring 2023}
+% Theorem-like structures are numbered within SECTION units
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{statement}[theorem]{Statement}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{fact}{Fact}
+%definition style
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}{Example}
+%\newtheorem{problem}{Problem}
+\newtheorem{exercise}{Exercise}
+\newtheorem{algorithm}{Algorithm}
+%remark style
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{reduction}[theorem]{Reduction}
+%\newtheorem{question}[theorem]{Question}
+\newtheorem{question}{Question}
+%\newtheorem{claim}[theorem]{Claim}
+%
+% Proof-making commands and environments
+\newcommand{\beginproof}{\medskip\noindent{\bf Proof.~}}
+\newcommand{\beginproofof}[1]{\medskip\noindent{\bf Proof of #1.~}}
+\newcommand{\finishproof}{\hspace{0.2ex}\rule{1ex}{1ex}}
+\newenvironment{problem}[1]{\medskip\noindent{\bf Problem #1.~}}{\shortbar}
+\newenvironment{solution}[1]{\medskip\noindent{\bf Solution #1.~}}{\shortbar}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\spn}{\mathop{\mathrm{span}}}
+
+%====header======
+\newcommand{\solutions}[3]{
+%\renewcommand{\thesolution}{{\large #2}.\arabic{problem}}
+\vspace{-2ex}
+\begin{center}
+{\small  \courseNumber, \courseTitle
+\hfill {\large \bf {Due: #1} }\\
+\semester, University of Maryland \hfill
+{\em Date: #3}}\\
+\vspace{-1ex}
+\hrulefill\\
+\vspace{4ex}
+{\Large #2}\\
+\vspace{2ex}
+\end{center}
+\shortbar
+\vspace{3ex}
+}
+
+\newcommand{\points}[1]{\textit{(#1 points)}}
+\newcommand{\bonus}[1]{\textit{(Bonus: #1 points)}}
+
+\input{Qcircuit}
+
+\let\ket\undefined
+\let\bra\undefined
+
+
+\include{qmacros}
+\usepackage{colonequals}
+%\newcommand{\<}{\langle}
+%\renewcommand{\>}{\rangle}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\solutions{April 20th, 2023}{Assignment 4}{\today}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Begin the solution for each problem by
+% \begin{solution}{Problem Number} and ends it with \end{solution}
+%
+% the solution for Problem 1
+
+Please submit it electronically to ELMS. This assignment is 6\% in your total points. For the simplicity
+of the grading, the total points for the assignment are 60. Note that we will reward the use of Latex for
+typesetting with bonus points (an extra 5\% of your points).
+
+\begin{problem}{1}
+\emph{The Fourier transform and translation invariance.}
+The quantum Fourier transform on $n$ qubits is defined as the transformation
+\[
+  |x\> \mapsto \frac{1}{\sqrt{2^n}} \sum_{y=0}^{2^n-1} e^{2\pi i xy/2^n} |y\>
+\]
+where we identify $n$-bit strings and the integers they represent in binary.
+More generally, for any nonnegative integer $N$, we can define the quantum Fourier transform modulo $N$ as
+\[
+  |x\> \stackrel{F_N}{\mapsto} \frac{1}{\sqrt{N}} \sum_{y=0}^{N-1} e^{2\pi i xy/N} |y\>
+\]
+where the state space is $\C^N$, with orthonormal basis $\{|0\>,|1\>,\ldots,|N-1\>\}$.
+Let $P$ denote the unitary operation that adds $1$ modulo $N$: for any $x \in \{0,1,\ldots,N-1\}$, $P|x\>=|x+1 \bmod N\>$.
+\begin{enumerate}
+\item \points{2} Show that $F_N$ is a unitary transformation.
+  \item \points{5} Show that the Fourier basis states are eigenvectors of $P$.  What are their eigenvalues?  (Equivalently, show that $F_N^{-1}PF_N$ is diagonal, and find its diagonal entries.)
+  \item \points{3} Let $|\psi\>$ be a state of $n$ qubits.  Show that if $P|\psi\>$ is measured in the Fourier basis (or equivalently, if we apply the inverse Fourier transform and then measure in the computational basis), the probabilities of all measurement outcomes are the same as if the state had been $|\psi\>$.
+\end{enumerate}
+\end{problem}
+
+\begin{problem}{2}
+\emph{Factoring 21.}
+\begin{enumerate}
+  \item \points{3} Suppose that, when running Shor's algorithm to factor the number $21$, you choose the value $a=2$.
+  What is the order $r$ of $a \bmod 21$?
+  \item \points{3} Give an expression for the probabilities of the possible measurement outcomes when performing phase estimation with $n$ bits of precision in Shor's algorithm.
+  \item \points{3} In the execution of Shor's algorithm considered in part (a), suppose you perform phase estimation with $n=7$ bits of precision.  Plot the probabilities of the possible measurement outcomes obtained by the algorithm.
+You are encouraged to use software to produce your plot.
+  \item \points{3} Compute $\gcd(21,a^{r/2}-1)$ and $\gcd(21,a^{r/2}+1)$.  How do they relate to the prime factors of $21$?
+  \item \points{3} How would your above answers change if instead of taking $a=2$, you had taken $a=5$?
+\end{enumerate}
+\end{problem}
+
+\begin{problem}{3}
+\emph{Density matrices.}
+Consider the ensemble in which the state $|0\>$ occurs with probability $3/5$ and the state $(|0\>+|1\>)/\sqrt2$ occurs with probability $2/5$.
+\begin{enumerate}
+  \item \points{2} What is the density matrix $\rho$ of this ensemble?
+  \item \points{3} Write $\rho$ in the form $\frac{1}{2}(I + r_x X + r_y Y + r_z Z)$, and plot $\rho$ as a point in the Bloch sphere.
+  \item \points{3} Suppose we measure the state in the computational basis.  What is the probability of getting the outcome $0$?  Compute this both by averaging over the ensemble of pure states and by computing $\tr(\rho|0\>\<0|)$, and show that the results are consistent.
+  \item \points{3} How does the density matrix change if we apply the Hadamard gate?  Compute this both by applying the Hadamard gate to each pure state in the ensemble and finding the corresponding density matrix, and by computing $H \rho H^\dag$.
+\end{enumerate}
+\end{problem}
+
+\begin{problem}{4}
+\emph{Local operations and the partial trace.}
+\begin{enumerate}
+  \item \points{3} Let $|\psi\>=\frac{\sqrt 3}{2} |00\> + \frac{1}{2} |11\>$.  Let $\rho$ denote the density matrix of $|\psi\>$ and let $\rho'$ denote the density matrix of $(I \otimes H)|\psi\>$.  Compute $\rho$ and $\rho'$.
+  \item \points{3} Compute $\tr_B(\rho)$ and $\tr_B(\rho')$, where $B$ refers to the second qubit.
+  \item \points{4} Let $\rho$ be a density matrix for a quantum system with a bipartite state space $A \otimes B$.  Let $I$ denote the identity operation on system $A$, and let $U$ be a unitary operation on system $B$.  Prove that $\tr_{B}(\rho) = \tr_{B}((I \otimes U)\rho(I \otimes U^\dag))$.
+  \item \points{3} Show that the converse of part (c) holds for pure states.  In other words, show that if $|\psi\>$ and $|\phi\>$ are bipartite pure states, and $\tr_{B}(|\psi\>\<\psi|) = \tr_{B}(|\phi\>\<\phi|)$, then there is a unitary operation $U$ acting on system $B$ such that $|\phi\> = (I \otimes U)|\psi\>$.
+  \item \points{2} Does the converse of part (c) hold for general density matrices?  Prove or disprove it.
+\end{enumerate}
+\end{problem}
+
+\begin{problem}{5} \emph{Product and entangled states.}  Determine which of the following states are entangled.  If the state is not entangled, show how to write it as a tensor product; if it is entangled, prove this.
+\begin{enumerate}
+  \item \points{3} $\frac{2}{3}|00\> + \frac{1}{3}|01\> - \frac{2}{3}|11\>$
+  \item \points{3} $\frac{1}{2}(|00\>-i|01\>+i|10\>+|11\>)$
+  \item \points{3} $\frac{1}{2}(|00\>-|01\>+|10\>+|11\>)$
+\end{enumerate}
+\end{problem}
+
+
+\end{document}

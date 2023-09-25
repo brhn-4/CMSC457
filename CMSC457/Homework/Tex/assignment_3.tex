@@ -1,0 +1,187 @@
+%You can leave alone everything before Line 84.
+\documentclass{article}
+\usepackage{url,amsfonts, amsmath, amssymb, amsthm}
+\usepackage{pict2e}
+\usepackage[percent]{overpic}
+% Page layout
+\setlength{\textheight}{8.75in}
+\setlength{\columnsep}{2.0pc}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0.0in}
+\setlength{\headsep}{0.0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\parindent}{1pc}
+\newcommand{\shortbar}{\begin{center}\rule{5ex}{0.1pt}\end{center}}
+%\renewcommand{\baselinestretch}{1.1}
+% Macros for course info
+\newcommand{\courseNumber}{CMSC/PHYS 457}
+\newcommand{\courseTitle}{Introduction to Quantum Computing}
+\newcommand{\semester}{Spring 2023}
+% Theorem-like structures are numbered within SECTION units
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{statement}[theorem]{Statement}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{fact}{Fact}
+%definition style
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}{Example}
+%\newtheorem{problem}{Problem}
+\newtheorem{exercise}{Exercise}
+\newtheorem{algorithm}{Algorithm}
+%remark style
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{reduction}[theorem]{Reduction}
+%\newtheorem{question}[theorem]{Question}
+\newtheorem{question}{Question}
+%\newtheorem{claim}[theorem]{Claim}
+%
+% Proof-making commands and environments
+\newcommand{\beginproof}{\medskip\noindent{\bf Proof.~}}
+\newcommand{\beginproofof}[1]{\medskip\noindent{\bf Proof of #1.~}}
+\newcommand{\finishproof}{\hspace{0.2ex}\rule{1ex}{1ex}}
+\newenvironment{problem}[1]{\medskip\noindent{\bf Problem #1.~}}{\shortbar}
+\newenvironment{solution}[1]{\medskip\noindent{\bf Solution #1.~}}{\shortbar}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\spn}{\mathop{\mathrm{span}}}
+
+%====header======
+\newcommand{\solutions}[3]{
+%\renewcommand{\thesolution}{{\large #2}.\arabic{problem}}
+\vspace{-2ex}
+\begin{center}
+{\small  \courseNumber, \courseTitle
+\hfill {\large \bf {Due: #1} }\\
+\semester, University of Maryland \hfill
+{\em Date: #3}}\\
+\vspace{-1ex}
+\hrulefill\\
+\vspace{4ex}
+{\Large #2}\\
+\vspace{2ex}
+\end{center}
+\shortbar
+\vspace{3ex}
+}
+
+\newcommand{\points}[1]{\textit{(#1 points)}}
+\newcommand{\bonus}[1]{\textit{(Bonus: #1 points)}}
+
+\input{Qcircuit}
+
+\let\ket\undefined
+\let\bra\undefined
+
+\include{qmacros}
+\usepackage{colonequals}
+%\newcommand{\<}{\langle}
+%\renewcommand{\>}{\rangle}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\solutions{April 6th, 2023}{Assignment 3}{\today}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Begin the solution for each problem by
+% \begin{solution}{Problem Number} and ends it with \end{solution}
+%
+% the solution for Problem 1
+
+Please submit it electronically to ELMS. This assignment is 6\% in your total points. For the simplicity
+of the grading, the total points for the assignment are 60. Note that we will reward the use of Latex for
+typesetting with bonus points (an extra 5\% of your points).
+
+\begin{problem}{1}
+\emph{The Bernstein-Vazirani problem.}
+
+\begin{enumerate}
+  \item \points{3} Suppose $f:\{0,1\}^n \to \{0,1\}$ is a function of the form
+  \[ f(\ul{x})=x_1s_1 + x_2s_2 + \cdots + x_n s_n \bmod 2 \] for some unknown $\ul{s} \in \{0,1\}^n$.  Given a black box for $f$, how many classical queries are required to learn $s$ with certainty?
+  \item \points{4} Prove that for any $n$-bit string $\ul{u} \in \{0,1\}^n$,
+  \[ \sum_{\ul{v} \in \{0,1\}^n} (-1)^{\ul{u}\cdot\ul{v}} = \begin{cases}2^n & \text{if $\ul{u}=\ul{0}$} \\ 0 & \text{otherwise} \end{cases} \]
+  where $\ul{0}$ denotes the $n$-bit string $00\ldots0$.
+  \item \points{4} Let $U_f$ denote a quantum black box for $f$, acting as
+  $U_f|\ul{x}\>|y\> = |\ul{x}\>|y \oplus f(\ul{x})\>$
+  for any $\ul{x} \in \{0,1\}^n$ and $y \in \{0,1\}$.
+  Show that the output of the following circuit is the state $|\ul{s}\> (|0\>-|1\>)/\sqrt{2}$.
+  \[
+  \Qcircuit @C=1em @R=.7em @!R {
+  \lstick{|0\>} & \gate{H} & \multigate{4}{U_f} & \gate{H} & \qw \\
+  \lstick{|0\>} & \gate{H} & \ghost{U_f} & \gate{H} & \qw \\
+  \lstick{\vdots\,\,\,} & \vdots &   & \vdots \\
+  \lstick{|0\>} & \gate{H} & \ghost{U_f} & \gate{H} & \qw \\
+  \lstick{\frac{|0\>-|1\>}{\sqrt2}} & \qw & \ghost{U_f} & \qw & \qw
+  }
+  \]
+   \item \points{1} What can you conclude about the quantum query complexity of learning $s$?
+\end{enumerate}
+\end{problem}
+
+\begin{problem}{2}
+ \emph{Determining the "slope" of a linear function over $\mathbb{Z}_4$}. 
+Let $\mathbb{Z}_4 = \{0, 1, 2, 3\}$, with arithmetic operations of addition and multiplication defined with respect to modulo 4 arithmetic on this set. Suppose that we are given a black-box computing a linear function $f: \mathbb{Z}_4 \rightarrow \mathbb{Z}_4$, which of the form $f(x) = ax+b$, with unknown coefficients $a, b \in \mathbb{Z}_4$ (throughout this question, multiplication and addition mean these operations in modulo 4 arithmetic). Let our goal be to determine the coefficient $a$ (the "slope" of the function). We will consider the number of quantum and classical queries needed to solve this problem.
+
+Assume that what we are given is a black box for the function $f$ that is in reversible form in the following sense. For each $x,y \in \mathbb{Z}_4$, the black box maps $(x,y)$ to $(x,y + f(x))$ in the classical case; and $\ket{x}\ket{y}$ to $\ket{x} \ket{y + f (x)}$ in the quantum case (which is unitary).
+
+Also, note that we can encode the elements of $\mathbb{Z}_4$ into 2-bit strings, using the usual representation of integers as a binary strings (00 = 0, 01 = 1, 10 = 2, 11 = 3). With this encoding, we can view $f$ as a function on 2-bit strings $f : \{0,1\}^2 \rightarrow \{0, 1\}^2$. When refering to the elements of $\mathbb{Z}_4$, we use the notation $\{0, 1, 2, 3\}$ and $\{00, 01, 10, 11\}$ interchangeably.
+
+\begin{itemize}
+  \item[(1)] \points{5} Prove that every classical algorithm for solving this problem must make two queries.
+  \item[(2)] \points{5} Consider the 2-qubit unitary operation $A$ corresponding to "add 1", such that $A\ket{x} =
+\ket{x+1}$ for all $x \in \mathbb{Z}_4$. It is easy to check that 
+   \[ A= \left( \begin{array}{cccc}
+0 & 0 & 0 & 1\\
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0 \end{array} \right).\] 
+Let $\ket{\psi} =\frac{1}{2} (\ket{00} + i \ket{01}+ i^2 \ket{10} +i^3 \ket{11})$, where $i=\sqrt{-1}$. Prove that $A\ket{\psi}=-i\ket{\psi}$.   
+  \item[(3)] \points{5} Show how to create the state $\frac{1}{2}((-i)^{f(00)}\ket{00}+(-i)^{f(01)}\ket{01}+(-i)^{f(10)}\ket{10}+(-i)^{f(11)}\ket{11})$ with a single query to $U_f$. (Hint: you may use the result in part (2) for this.)
+  \item[(4)] \points{5} Show how to solve the problem (i.e., determine the coefficient $a \in \mathbb{Z}_4$) with a single
+quantum query to $f$. (Hint: you may use the result in part (3) for this.)
+\end{itemize}
+\end{problem}
+
+\begin{problem}{3} \emph{Simon's algorithm and its extension.}
+In Simon's problem, recall that we're given oracle access to a
+function $f : \{0, 1\}^n \rightarrow \{0, 1\}^n$ with the promise that there exists a secret string $s \neq 0^n$
+such that $f(x) = f(y)$ if and only if $y = x \oplus s$ for all different $x, y\in \{0, 1\}^n$. 
+
+\begin{enumerate}
+   \item \points{5} Recall the algorithm described during the lecture. Rigorously prove that $O(n)$ repetitions of Simon's
+algorithm are enough if we want to succeed with $1-e^{-n}$ probability.
+   \item \points{10} Suppose instead that there are two nonzero secret strings, $s\neq t$, such that $f(x) =
+f(x \oplus s) = f(x \oplus  t) = f(x \oplus s \oplus t)$ for all x. Describe a variation of Simon's algorithm
+that finds the entire set $s, t, s\oplus t$ in time polynomial in $n$. When you measure a state in
+your algorithm, what are the possible results of the measurement? How do you use those
+measurement results to reconstruct the set $s, t, s\oplus t$?
+\end{enumerate}
+\end{problem}
+
+
+\begin{problem}{4}
+\emph{Searching for a quantum state}.
+
+Suppose you are given a black box $U_\phi$ that identifies an unknown quantum state $|\phi\>$ (which may not be a computational basis state).  Specifically, $U_\phi |\phi\> = -|\phi\>$, and $U_\phi|\xi\>=|\xi\>$ for any state $|\xi\>$ satisfying $\<\phi|\xi\>=0$.
+
+Consider an algorithm for preparing $|\phi\>$ that starts from some fixed state $|\psi\>$ and repeatedly applies the unitary transformation $VU_\phi$, where $V=2|\psi\>\<\psi|-I$ is a reflection about $|\psi\>$.
+
+Let $|\phi^\perp\> = \frac{e^{-i\lambda}|\psi\> - \sin(\theta) |\phi\>}{\cos(\theta)}$ denote a state orthogonal to $|\phi\>$ in $\spn\{|\phi\>,|\psi\>\}$, where $\<\phi|\psi\> = e^{i\lambda} \sin(\theta)$ for some $\lambda,\theta \in \R$.
+
+\begin{enumerate}
+  \item \points{2} Write the initial state $|\psi\>$ in the basis $\{|\phi\>,|\phi^\perp\>\}$.
+  \item \points{3} Write $U_\phi$ and $V$ as matrices in the basis $\{|\phi\>,|\phi^\perp\>\}$.
+  \item \points{3} Let $k$ be a positive integer.  Compute $(VU_\phi)^k$. 
+  \item \points{3} Compute $\<\phi|(VU_\phi)^k|\psi\>$.
+  \item \points{2} Suppose that $|\<\phi|\psi\>|$ is small.  Approximately what value of $k$ should you choose in order for the algorithm to prepare a state close to $|\phi\>$, up to a global phase?  Express your answer in terms of $|\<\phi|\psi\>|$.
+\end{enumerate}
+\end{problem}
+
+\end{document}
